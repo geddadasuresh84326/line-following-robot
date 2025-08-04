@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bumberbot">
-
+   
     <xacro:arg name="is_ignition" default="true"/>
     <!-- Include gazebo parameters -->
     <xacro:include filename="$(find robot_description)/urdf/bumperbot_gazebo.xacro"/>
-    
+    <xacro:include filename="$(find robot_description)/urdf/common_properties.xacro"/>
+    <xacro:include filename="$(find robot_description)/urdf/camera.xacro"/>
     <!-- ROS2 control -->
     <!-- <xacro:include filename="$(find robot_description)/urdf/bumperbot_ros2_control.xacro"/> -->
     
@@ -178,4 +179,6 @@
         <child link="caster_rear_link"/>
         <origin xyz="-0.04755 0 -0.0275" rpy="0.0 0.0 0.0"/>
     </joint>
+
+    
 </robot>
