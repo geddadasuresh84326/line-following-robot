@@ -25,14 +25,14 @@
             <origin rpy="0 0 0" xyz = "0 0 0"/>
             <geometry>
                 <!-- <mesh filename="package://robot_description/meshes/base_link.STL" scale="1 1 1"/> -->
-                <mesh filename="$(find robot_description)/meshes/base_link.STL"/>
+                <mesh filename="file://$(find robot_description)/meshes/base_link.STL"/>
             </geometry>
         </visual>
         <collision>
             <origin rpy="0 0 0" xyz = "0 0 0"/>
             <geometry>
                 <!-- <mesh filename="package://robot_description/meshes/base_link.STL" scale="1 1 1"/> -->
-                <mesh filename="$(find robot_description)/meshes/base_link.STL"/>
+                <mesh filename="file://$(find robot_description)/meshes/base_link.STL"/>
 
             </geometry>
         </collision>
@@ -59,7 +59,7 @@
             <origin xyz="0 0.0 0.0" rpy="1.57 0.0 0.0"/>
             <geometry>
                 <!-- <mesh filename="package://robot_description/meshes/wheel_right_link.STL" scale="1 1 1"/> -->
-                <mesh filename="$(find robot_description)/meshes/wheel_right_link.STL"/>
+                <mesh filename="file://$(find robot_description)/meshes/wheel_right_link.STL"/>
 
             </geometry>
         </visual>
@@ -91,7 +91,7 @@
             <origin xyz="0 0.0 0.0" rpy="-1.57 0.0 0.0"/>
             <geometry>
                 <!-- <mesh filename="package://robot_description/meshes/wheel_left_link.STL" scale="1 1 1"/> -->
-                <mesh filename="$(find robot_description)/meshes/wheel_left_link.STL"/>
+                <mesh filename="file://$(find robot_description)/meshes/wheel_left_link.STL"/>
 
             </geometry>
         </visual>
@@ -123,7 +123,7 @@
            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
            <geometry>
                <!-- <mesh filename="package://robot_description/meshes/caster_front_link.STL" scale="1 1 1"/> -->
-                <mesh filename="$(find robot_description)/meshes/caster_front_link.STL"/>
+                <mesh filename="file://$(find robot_description)/meshes/caster_front_link.STL"/>
 
             </geometry>
         </visual>
@@ -161,7 +161,7 @@
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                 <!-- <mesh filename="package://robot_description/meshes/caster_rear_link.STL" scale="1 1 1"/> -->
-                <mesh filename="$(find robot_description)/meshes/caster_rear_link.STL"/>
+                <mesh filename="file://$(find robot_description)/meshes/caster_rear_link.STL"/>
 
             </geometry>
         </visual>

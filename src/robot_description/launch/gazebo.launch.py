@@ -50,6 +50,7 @@ def generate_launch_description():
         arguments=["-topic","robot_description",
                    "-name","bumperbot"]
     )
+    
     return LaunchDescription([
         model_arg,
         robot_state_publisher,
