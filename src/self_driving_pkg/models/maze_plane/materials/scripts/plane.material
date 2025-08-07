@@ -6,7 +6,7 @@ material maze/Diffuse
     {
       texture_unit
       {
-        texture maze.png
+        texture plane.png
         
       }
     }

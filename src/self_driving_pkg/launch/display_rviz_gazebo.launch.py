@@ -34,7 +34,7 @@ def generate_launch_description():
     
     gazebo_world_arg = DeclareLaunchArgument(
         "world",
-        default_value=os.path.join(get_package_share_directory("self_driving_pkg"),"worlds","b.world"),
+        default_value=os.path.join(get_package_share_directory("self_driving_pkg"),"worlds","lane_following_world.world"),
         description="custom world with models"
     )
     rviz_config_arg = DeclareLaunchArgument(
@@ -71,7 +71,7 @@ def generate_launch_description():
     spawn_entity_node = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
-        arguments=['-topic', 'robot_description', '-entity', 'lane_following_robot1'],
+        arguments=['-topic', 'robot_description', '-entity', 'lane_following_robot'],
         output='screen'
     )
     rviz_node = Node(
@@ -81,14 +81,26 @@ def generate_launch_description():
         arguments=['-d', LaunchConfiguration('rviz_config')],
         output='screen'
     )
+    controller_manager = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[os.path.join(
+            get_package_share_directory("bumperbot_controller"),
+            "config", "bumperbot_controllers.yaml"
+        ), {'robot_description': robot_description}],
+        output="screen",
+    )
+    
     return LaunchDescription([
         rviz_config_arg,
-        rviz_node,
         gazebo_world_arg,
         model_arg,
         robot_state_publisher,
         gzserver_node,
         gzclient_node,
         spawn_entity_node,
-        joint_state_publisher
+        controller_manager,
+        joint_state_publisher,
+        rviz_node,
+        
     ])

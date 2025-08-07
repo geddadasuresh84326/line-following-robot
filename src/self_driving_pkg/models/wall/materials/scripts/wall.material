@@ -1,4 +1,4 @@
-material maze/Diffuse
+material wall/Diffuse
 {
   technique
   {
@@ -6,8 +6,7 @@ material maze/Diffuse
     {
       texture_unit
       {
-        texture maze.png
-        
+        texture wall.jpeg
       }
     }
   }
