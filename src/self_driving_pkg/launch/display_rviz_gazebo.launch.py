@@ -81,15 +81,15 @@ def generate_launch_description():
         arguments=['-d', LaunchConfiguration('rviz_config')],
         output='screen'
     )
-    controller_manager = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        parameters=[os.path.join(
-            get_package_share_directory("bumperbot_controller"),
-            "config", "bumperbot_controllers.yaml"
-        ), {'robot_description': robot_description}],
-        output="screen",
-    )
+    # controller_manager = Node(
+    #     package="controller_manager",
+    #     executable="ros2_control_node",
+    #     parameters=[os.path.join(
+    #         get_package_share_directory("bumperbot_controller"),
+    #         "config", "bumperbot_controllers.yaml"
+    #     ), {'robot_description': robot_description}],
+    #     output="screen",
+    # )
     
     return LaunchDescription([
         rviz_config_arg,
@@ -99,7 +99,7 @@ def generate_launch_description():
         gzserver_node,
         gzclient_node,
         spawn_entity_node,
-        controller_manager,
+        # controller_manager,
         joint_state_publisher,
         rviz_node,
         
