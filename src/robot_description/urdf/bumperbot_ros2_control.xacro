@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bumperbot">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="my_robot">
     <!-- ROS2 Control Setup -->
     <ros2_control name="GazeboSystem" type="system">
         <hardware>

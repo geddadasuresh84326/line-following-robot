@@ -10,7 +10,7 @@ def generate_launch_description():
 
     model_arg = DeclareLaunchArgument(
         name="model",
-        default_value=os.path.join(get_package_share_directory("bumperbot_description"),"urdf","bumperbot.urdf.xacro"),
+        default_value=os.path.join(get_package_share_directory("robot_description"),"urdf","robot.urdf.xacro"),
         description="Absolute path to the urdf model"
     )
     robot_description = ParameterValue(Command(["xacro ", LaunchConfiguration('model')]),value_type=str)
@@ -30,7 +30,7 @@ def generate_launch_description():
         executable='rviz2',
         name = "rviz2",
         output = "screen",
-        arguments=["-d",os.path.join(get_package_share_directory("bumperbot_description"),"rviz","display.rviz")]
+        arguments=["-d",os.path.join(get_package_share_directory("robot_description"),"rviz","display.rviz")]
     )
 
     return LaunchDescription([

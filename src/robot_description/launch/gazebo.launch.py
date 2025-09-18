@@ -9,12 +9,12 @@ from launch.substitutions import Command,LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
-    bumperbot_description_dir = get_package_share_directory("bumperbot_description")
+    bumperbot_description_dir = get_package_share_directory("robot_description")
     ros_distro = os.environ["ROS_DISTRO"]
     is_ignition = "True" if ros_distro == "humble" else "False"
     model_arg = DeclareLaunchArgument(
         name="model",
-        default_value=os.path.join(bumperbot_description_dir,"urdf","bumperbot.urdf.xacro"),
+        default_value=os.path.join(bumperbot_description_dir,"urdf","robot.urdf.xacro"),
         description="Absolute path to the urdf model"
     )
     robot_description = ParameterValue(Command([
@@ -48,7 +48,7 @@ def generate_launch_description():
         executable="create",
         output = "screen",
         arguments=["-topic","robot_description",
-                   "-name","bumperbot"]
+                   "-name","my_robot"]
     )
     
     return LaunchDescription([

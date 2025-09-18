@@ -23,7 +23,7 @@ def generate_launch_description():
     )
      # GAZEBO_MODEL_PATH 
     os.environ['GAZEBO_MODEL_PATH'] = (
-        os.environ.get("GAZEBO_MODEL_PATH",'') + os.pathsep + model_share_dir 
+        os.environ.get("GAZEBO_MODEL_PATH",'') + os.pathsep + model_share_dir
     )
     robot_description = ParameterValue(Command([
         "xacro ", LaunchConfiguration('model'),
@@ -37,22 +37,22 @@ def generate_launch_description():
         default_value=os.path.join(get_package_share_directory("self_driving_pkg"),"worlds","line_aruco.world"),
         description="custom world with models"
     )
-    rviz_config_arg = DeclareLaunchArgument(
-        "rviz_config",
-        default_value=os.path.join(get_package_share_directory("robot_description"),"rviz","display.rviz"),
-        description="rviz configuration"
-    )
-    robot_state_publisher = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        parameters=[{"robot_description":robot_description}]
-    )
-    joint_state_publisher = Node(
-        package='joint_state_publisher',
-        executable='joint_state_publisher',
-        name='joint_state_publisher',
-        parameters=[{'source_list': ['joint_states']}]
-    )
+    # rviz_config_arg = DeclareLaunchArgument(
+    #     "rviz_config",
+    #     default_value=os.path.join(get_package_share_directory("robot_description"),"rviz","display.rviz"),
+    #     description="rviz configuration"
+    # )
+    # robot_state_publisher = Node(
+    #     package="robot_state_publisher",
+    #     executable="robot_state_publisher",
+    #     parameters=[{"robot_description":robot_description}]
+    # )
+    # joint_state_publisher = Node(
+    #     package='joint_state_publisher',
+    #     executable='joint_state_publisher',
+    #     name='joint_state_publisher',
+    #     parameters=[{'source_list': ['joint_states']}]
+    # )
     # gazebo server
     gzserver_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -68,25 +68,19 @@ def generate_launch_description():
     )
 
     # This node needs to get the robot_description parameter from the robot_state_publisher
-    spawn_entity_node = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=['-topic', 'robot_description', 
-                   '-entity', 'line_following_robot',
-                   '-x', '-3.4',    # X position
-                   '-y', '-4.6',    # Y position
-                   '-z', '0.0',    # Z height
-                   '-Y', '1.5708'     # Yaw (rotation around Z, in radians)
-        ],
-        output='screen'
-    )
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name='rviz2',
-        arguments=['-d', LaunchConfiguration('rviz_config')],
-        output='screen'
-    )
+    # spawn_entity_node = Node(
+    #     package='gazebo_ros',
+    #     executable='spawn_entity.py',
+    #     arguments=['-topic', 'robot_description', '-entity', 'lane_following_robot'],
+    #     output='screen'
+    # )
+    # rviz_node = Node(
+    #     package='rviz2',
+    #     executable='rviz2',
+    #     name='rviz2',
+    #     arguments=['-d', LaunchConfiguration('rviz_config')],
+    #     output='screen'
+    # )
     # controller_manager = Node(
     #     package="controller_manager",
     #     executable="ros2_control_node",
@@ -98,15 +92,15 @@ def generate_launch_description():
     # )
     
     return LaunchDescription([
-        rviz_config_arg,
+        # rviz_config_arg,
         gazebo_world_arg,
         model_arg,
-        robot_state_publisher,
+        # robot_state_publisher,
         gzserver_node,
         gzclient_node,
-        spawn_entity_node,
+        # spawn_entity_node,
         # controller_manager,
-        joint_state_publisher,
-        rviz_node,
+        # joint_state_publisher,
+        # rviz_node,
         
     ])
