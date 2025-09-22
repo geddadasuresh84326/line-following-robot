@@ -210,3 +210,6 @@ build/
 install/
 log/
 .vscode/
+
+a.py
+test.py

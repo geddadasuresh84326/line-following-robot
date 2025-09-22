@@ -1,0 +1,1 @@
+aruco_distance_threshold = 5.2
