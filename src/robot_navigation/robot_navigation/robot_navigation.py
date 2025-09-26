@@ -10,7 +10,14 @@ from constants.constants import aruco_distance_threshold
 LINEAR_SPEED = 0.3 
 
 # angular speed 
-KP = 0.006
+# Controller gains
+KP = 0.001  # Proportional gain
+KI = 0.0 # Integral gain
+KD = 0.001  # Derivative gain
+
+# KP = 0.0003  # Proportional gain
+# KI = 0.0001 # Integral gain
+# KD = 0.008  # Derivative gain
 
 class ImageSubscriber(Node):
     def __init__(self):
@@ -34,6 +41,11 @@ class ImageSubscriber(Node):
         self.marker_length = 1.0
         self.aruco_distance = None
         self.marker_id = None
+
+        # PID controller variables
+        self.previous_error = 0.0
+        self.integral_error = 0.0
+
     def camera_info_callback(self, msg):
         self.camera_matrix = np.array(msg.k).reshape(3, 3)
         self.dist_coeffs = np.array(msg.d)
@@ -71,11 +83,11 @@ class ImageSubscriber(Node):
         # getting image right part to turn right
         if self.marker_id == 1 and self.aruco_distance < aruco_distance_threshold:
             self.get_logger().info(f"distance : {self.aruco_distance}")
-            cv_image = cv_image[:,w//2+50:]
+            cv_image[:,:w//2] = 0
         # getting image left part to turn left
         elif self.marker_id == 0 and self.aruco_distance < aruco_distance_threshold:
             self.get_logger().info(f"distance : {self.aruco_distance}")
-            cv_image = cv_image[:,:w//2+50]
+            cv_image[:,w//2:] = 0
         # stop the robot
         elif self.marker_id == 2 and self.aruco_distance < 2.7:
             cmd_msg = TwistStamped()
@@ -104,35 +116,51 @@ class ImageSubscriber(Node):
         if line:
             x = line['x']
             error = x - w//2
+
+            # PID controller calculation
+            self.integral_error += error
+            derivative_error = error - self.previous_error
+            self.previous_error = error
+            
+            # calculating angular speed using PID 
+            angular_speed = -(KP * error + KI * self.integral_error + KD * derivative_error)
+            self.get_logger().info(f"error: {error}, angular speed: {angular_speed}")
+
             cv2.circle(blue_roi_img,(line['x'],line['y']),5,(0,0,255),7)
-        
+            # Publish velocity commands
+            cmd_msg.twist.linear.x = LINEAR_SPEED
+            cmd_msg.twist.angular.z = float(angular_speed)
+            self.pub_.publish(cmd_msg)
+
         # publishing velocity commands to our robot
-        cmd_msg.twist.linear.x = LINEAR_SPEED
-        if error < 0:
-            cmd_msg.twist.angular.z = float(error) * -KP
-        else:
-            cmd_msg.twist.angular.z = float(error) * -KP
-        self.get_logger().info(f"angular speed : {cmd_msg.twist.angular.z} and error : {error}")
-        self.pub_.publish(cmd_msg)
+        # cmd_msg.twist.linear.x = LINEAR_SPEED
+        # if error < 0:
+        #     cmd_msg.twist.angular.z = float(error) * -KP
+        # else:
+        #     cmd_msg.twist.angular.z = float(error) * -KP
+        # self.get_logger().info(f"angular speed : {cmd_msg.twist.angular.z} and error : {error}")
+        # self.pub_.publish(cmd_msg)
         cv2.imshow("blue line ",blue_roi_img)
         cv2.imshow("cv image ",cv_image)
         cv2.waitKey(1)
 
     def get_contours(self,mask):
         """Returns the centroid of the largest contour in the binary image (mask)"""
-        MIN_AREA = 50
+        MIN_AREA = 200
 
         # get list of contours 
         contours , _ = cv2.findContours(mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
         
-        line = {}
-        for contour in contours:
-            M = cv2.moments(contour)
+        if contours:
+            largest_contour = max(contours,key=cv2.contourArea)
+            M = cv2.moments(largest_contour)
             if (M['m00'] > MIN_AREA):
                 self.get_logger().info(f"M : {M}")
-                line['x'] = int(M['m10']/M['m00'])
-                line['y'] = int(M['m01']/M['m00'])
-        return (line)
+                x = int(M['m10']/M['m00'])
+                y = int(M['m01']/M['m00'])
+
+                return {'x': x, 'y': y}
+            
 def main(args=None):
     rclpy.init(args = args)
     image_subscriber = ImageSubscriber()
